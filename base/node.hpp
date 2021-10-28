@@ -8,7 +8,7 @@ Authors: Hongzhi Chen (hzchen@cse.cuhk.edu.hk)
 #include <string>
 #include <sstream>
 #include <iostream>
-
+#include <cassert>
 #include <mpi.h>
 #include <omp.h>
 

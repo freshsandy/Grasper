@@ -78,6 +78,8 @@ class LabelledBranchExpertBase :  public AbstractExpert {
         }
     }
 
+    virtual void process_branch(int tid, const vector<Expert_Object> & experts, Message & msg, typename BranchDataTable::accessor& ac, bool isReady) = 0;
+
  protected:
     int num_thread_;
     AbstractMailbox* mailbox_;
@@ -86,7 +88,7 @@ class LabelledBranchExpertBase :  public AbstractExpert {
     virtual void process_spawn(Message & msg, typename BranchDataTable::accessor& ac) = 0;
 
     // Child class process message with type = BRANCH
-    virtual void process_branch(int tid, const vector<Expert_Object> & experts, Message & msg, typename BranchDataTable::accessor& ac, bool isReady) = 0;
+    //virtual void process_branch(int tid, const vector<Expert_Object> & experts, Message & msg, typename BranchDataTable::accessor& ac, bool isReady) = 0;
 
     // get sub steps of branch expert
     virtual void get_steps(const Expert_Object & expert, vector<int>& steps) = 0;

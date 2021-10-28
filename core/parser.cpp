@@ -155,7 +155,8 @@ void Parser::SplitPredicate(string& param, Predicate_T& pred_type, vector<string
     } else {
         throw ParserException("unexpected predicate: " + param);
     }
-    return pred_params;
+    //return pred_params;
+    return ;
 }
 
 bool Parser::IsNumber() {
