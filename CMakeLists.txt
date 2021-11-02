@@ -25,7 +25,7 @@ set(COMMON_LINK_LIBS "-lrt")
 #Please manually SET the dependency paths for the following libraries.
 set(ZMQ_ROOT "/home/s164864/home/zmq")
 set(GLOG_ROOT "/home/s164864/home/glog/")
-set(HDFS2_ROOT "/data/opt/msc_big_data/hadoop-2.9.2")
+set(HDFS2_ROOT "/home/s164864/home/hadoop-2.6.0")
 set(IBVERB_ROOT "/home/s164864/home/lib/libibverbs")
 set(TBB_ROOT "/home/s164864/intel/oneapi/tbb/latest")
 set(MKL_ROOT "/home/s164864/intel/oneapi/mkl/latest")

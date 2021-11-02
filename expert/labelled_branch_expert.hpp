@@ -31,9 +31,11 @@ struct branch_data_base {
 template<typename T = BranchData::branch_data_base>
 class LabelledBranchExpertBase :  public AbstractExpert {
     static_assert(std::is_base_of<BranchData::branch_data_base, T>::value, "T must derive from barrier_data_base");
-    using BranchDataTable = tbb::concurrent_hash_map<mkey_t, T, MkeyHashCompare>;
+    // using BranchDataTable = tbb::concurrent_hash_map<mkey_t, T, MkeyHashCompare>;
 
  public:
+
+    using BranchDataTable = tbb::concurrent_hash_map<mkey_t, T, MkeyHashCompare>;
     LabelledBranchExpertBase(int id, DataStore* data_store, int num_thread, AbstractMailbox* mailbox, CoreAffinity* core_affinity, msg_id_alloc* allocator): AbstractExpert(id, data_store, core_affinity), num_thread_(num_thread), mailbox_(mailbox), id_allocator_(allocator) {}
 
     void process(const vector<Expert_Object> & experts,  Message & msg) {
@@ -78,7 +80,6 @@ class LabelledBranchExpertBase :  public AbstractExpert {
         }
     }
 
-    virtual void process_branch(int tid, const vector<Expert_Object> & experts, Message & msg, typename BranchDataTable::accessor& ac, bool isReady) = 0;
 
  protected:
     int num_thread_;
@@ -88,7 +89,7 @@ class LabelledBranchExpertBase :  public AbstractExpert {
     virtual void process_spawn(Message & msg, typename BranchDataTable::accessor& ac) = 0;
 
     // Child class process message with type = BRANCH
-    //virtual void process_branch(int tid, const vector<Expert_Object> & experts, Message & msg, typename BranchDataTable::accessor& ac, bool isReady) = 0;
+    virtual void process_branch(int tid, const vector<Expert_Object> & experts, Message & msg, typename BranchDataTable::accessor& ac, bool isReady) = 0;
 
     // get sub steps of branch expert
     virtual void get_steps(const Expert_Object & expert, vector<int>& steps) = 0;
