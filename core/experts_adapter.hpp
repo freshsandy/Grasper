@@ -151,10 +151,13 @@ class ExpertAdapter {
         do {
             current_step = msg.meta.step;
             EXPERT_T next_expert = ac->second[current_step].expert_type;
+	    printf("%s process()\n", ExpertType[(int)next_expert]);
+
             // int offset = (experts_[next_expert]->GetExpertId() + timer_offset) * num_thread_;
 
             // timer::start_timer(tid + offset);
             experts_[next_expert]->process(ac->second, msg);
+	    printf(",,,\n");
             // timer::stop_timer(tid + offset);
         } while (current_step != msg.meta.step);    // process next expert directly if step is modified
     }

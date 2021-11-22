@@ -28,6 +28,9 @@ Authors: Nick Fang (jcfang6@cse.cuhk.edu.hk)
 #include "storage/mpi_snapshot.hpp"
 #include "storage/snapshot_func.hpp"
 
+// #define p(x) printf("p%d\n", x); fflush(stdout)
+#define p(x) ;
+
 using namespace std;
 
 class InitExpert : public AbstractExpert {
@@ -60,10 +63,14 @@ class InitExpert : public AbstractExpert {
     virtual ~InitExpert() {}
 
     void process(const vector<Expert_Object> & expert_objs, Message & msg) {
+	 p(-1);
         int tid = TidMapper::GetInstance()->GetTid();
 
+	p(-1);
         if (expert_objs[msg.meta.step].params.size() == 1) {
+		p(0);
             InitWithoutIndex(tid, expert_objs, msg);
+	    	p(100);
         } else {
             InitWithIndex(tid, expert_objs, msg);
         }
@@ -236,7 +243,9 @@ class InitExpert : public AbstractExpert {
     void InitWithoutIndex(int tid, const vector<Expert_Object> & expert_objs, Message & msg) {
         if (!is_ready_) {
             if (thread_mutex_.try_lock()) {
+		p(2);
                 InitData();
+		p(3);
                 is_ready_ = true;
                 thread_mutex_.unlock();
             } else {
@@ -248,6 +257,7 @@ class InitExpert : public AbstractExpert {
         Meta m = msg.meta;
         const Expert_Object& expert_obj = expert_objs[m.step];
 
+	p(4);
         // Get init element type
         Element_T inType = (Element_T)Tool::value_t2int(expert_obj.params.at(0));
         vector<Message>* msg_vec;
