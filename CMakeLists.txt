@@ -19,8 +19,11 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m64")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive")
-
+# close the debug mode
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DNDBUG")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -w")
 set(COMMON_LINK_LIBS "-lrt")
+
 
 #CONFIGURE ME!!!
 #Please manually SET the dependency paths for the following libraries.

@@ -19,7 +19,7 @@ Authors: Hongzhi Chen (hzchen@cse.cuhk.edu.hk)
 #include "utils/global.hpp"
 #include "utils/config.hpp"
 #include "third_party/zmq.hpp"
-
+#define p(x) printf("p%d\n", x); fflush(stdout)
 using namespace std;
 
 struct Progress {
@@ -66,10 +66,10 @@ class Master {
                 break;
         }
     }
-
+    
     int ProgScheduler() {
         // find worker with least tasks remained
-        uint32_t min = UINT_MAX;
+		uint32_t min = UINT_MAX;
         int min_index = -1;
         map<int, Progress>::iterator m_iter;
         for (m_iter = progress_map_.begin(); m_iter != progress_map_.end(); m_iter++) {
@@ -78,10 +78,12 @@ class Master {
                 min_index = m_iter->first;
             }
         }
-
         if (min_index != -1) {
             return min_index;
         }
+		if(node_.get_world_size()==1){
+			return 1;
+		}
         return rand() % (node_.get_world_size() - 1) + 1;
     }
 
@@ -89,43 +91,38 @@ class Master {
         while (1) {
             zmq::message_t request;
             socket_->recv(&request);
-
-            char* buf = new char[request.size()];
+			char* buf = new char[request.size()];
             memcpy(buf, request.data(), request.size());
             obinstream um(buf, request.size());
-
             int client_id;
             um >> client_id;
             if (client_id == -1) {  // first connection, obtain the global client ID
                 client_id = ++client_num;
             }
-
             int target_engine_id = ProgScheduler();
             progress_map_[target_engine_id].assign_tasks++;
             cout << "##### Master recvs request from Client: " << client_id << " and reply " << target_engine_id << endl;
-
+			
             ibinstream m;
-            m << client_id;
+			m << client_id;
             m << target_engine_id;
-
             zmq::message_t msg(m.size());
             memcpy((void *)msg.data(), m.get_buf(), m.size());
-            socket_->send(msg);
+			socket_->send(msg);
         }
     }
 
     void Start() {
         thread listen(&Master::ProgListener, this);
-        thread process(&Master::ProcessREQ, this);
-
+	thread process(&Master::ProcessREQ, this);
+	
         int end_tag = 0;
-        while (end_tag < node_.get_local_size()) {
+	while (end_tag < node_.get_local_size()) {
             int tag = recv_data<int>(node_, MPI_ANY_SOURCE, true, MSCOMMUN_CHANNEL);
-            if (tag == DONE) {
+	    if (tag == DONE) {
                 end_tag++;
             }
         }
-
         listen.join();
         process.join();
     }

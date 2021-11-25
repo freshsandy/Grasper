@@ -11,6 +11,7 @@ Authors: Hongzhi Chen (hzchen@cse.cuhk.edu.hk)
 #include "driver/worker.hpp"
 
 #include "glog/logging.h"
+#define p(x) printf("p%s\n", x); fflush(stdout)
 
 int main(int argc, char* argv[]) {
     google::InitGoogleLogging(argv[0]);
@@ -43,17 +44,16 @@ int main(int argc, char* argv[]) {
     cout  << "DONE -> Config->Init()" << endl;
 
     if (my_node.get_world_rank() == MASTER_RANK) {
-        Master master(my_node);
+	Master master(my_node);
         master.Init();
-
         master.Start();
     } else {
         Worker worker(my_node, nodes);
-        worker.Init();
-        worker.Start();
-
+	worker.Init();
+	worker.Start();
+	p("after worker start");
         worker_barrier(my_node);
-        worker_finalize(my_node);
+	worker_finalize(my_node);
     }
 
     node_barrier();

@@ -288,14 +288,14 @@ class message_t
     inline ~message_t() ZMQ_NOTHROW
     {
         int rc = zmq_msg_close(&msg);
-	if (rc) {
-		const int maxStackLevel = 50;
-		void* buffer[maxStackLevel];
-		int levels = backtrace(buffer, maxStackLevel);
+	//if (rc) {
+	//	const int maxStackLevel = 50;
+	//	void* buffer[maxStackLevel];
+	//	int levels = backtrace(buffer, maxStackLevel);
 
 		// print to stderr (fd = 2), and remove this function from the trace
-		backtrace_symbols_fd(buffer + 1, levels - 1, 2);
-	}
+	//	backtrace_symbols_fd(buffer + 1, levels - 1, 2);
+	//}
         ZMQ_ASSERT(rc == 0);
     }
 

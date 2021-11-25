@@ -74,6 +74,7 @@ void TCPMailbox::Init(vector<Node> & nodes) {
     rr_size = 3;
 }
 
+#define p(x) printf("==p%d==\n",x); fflush(stdout);
 int TCPMailbox::Send(int tid, const Message & msg) {
     if (msg.meta.recver_nid == my_node_.get_local_rank()) {
         local_msgs[msg.meta.recver_tid]->Push(msg);
@@ -85,16 +86,14 @@ int TCPMailbox::Send(int tid, const Message & msg) {
 
         zmq::message_t zmq_msg(m.size());
         memcpy((void *)zmq_msg.data(), m.get_buf(), m.size());
-
         pthread_spin_lock(&locks[pcode]);
         if (senders_.find(pcode) == senders_.end()) {
             cout << "Cannot find dst_node port num" << endl;
             pthread_spin_unlock(&locks[pcode]);
             return 0;
         }
-
         senders_[pcode]->send(zmq_msg, ZMQ_DONTWAIT);
-        pthread_spin_unlock(&locks[pcode]);
+		pthread_spin_unlock(&locks[pcode]);
     }
 }
 

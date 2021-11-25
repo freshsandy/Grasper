@@ -157,7 +157,6 @@ class ExpertAdapter {
 
             // timer::start_timer(tid + offset);
             experts_[next_expert]->process(ac->second, msg);
-	    printf(",,,\n");
             // timer::stop_timer(tid + offset);
         } while (current_step != msg.meta.step);    // process next expert directly if step is modified
     }

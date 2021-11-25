@@ -17,20 +17,19 @@ Authors: Chenghuan Huang (chhuang@cse.cuhk.edu.hk)
 #include <fstream>
 #include <functional>
 
+#define p(x) printf("%d\n",x); fflush(stdout);
+
 using namespace std;
 
 void MPIUniqueNamer::GetHostsStr() {
     char tmp_hn[1000];
     int hn_len;
     MPI_Get_processor_name(tmp_hn, &hn_len);
-
     string hn(tmp_hn);
-
     int* hn_lens = new int[comm_sz_];
     int* hn_displs = new int[comm_sz_];
 
     MPI_Allgather(&hn_len, 1, MPI_INT, hn_lens, 1, MPI_INT, comm_);
-
     // after gathered this, call MPI_Allgatherv to merge hostname
     int total_len = hn_lens[0];
     hn_displs[0] = 0;
@@ -39,10 +38,8 @@ void MPIUniqueNamer::GetHostsStr() {
         hn_displs[i] = total_len;
         total_len += hn_lens[i];
     }
-
     char* tmp_hn_cat = new char[total_len + 1];
     MPI_Allgatherv(tmp_hn, hn_len, MPI_CHAR, tmp_hn_cat, hn_lens, hn_displs, MPI_CHAR, comm_);
-
     tmp_hn_cat[total_len] = 0;
     string hn_cat(tmp_hn_cat);
     string rank_str = ultos(my_rank_);
@@ -50,9 +47,9 @@ void MPIUniqueNamer::GetHostsStr() {
     // make sure that different host has different dir name, which enables debug on NFS
     hn_cat_ = rank_str + hn_cat;
 
-    delete hn_lens;
-    delete hn_displs;
-    delete tmp_hn_cat;
+    delete[] hn_lens;
+    delete[] hn_displs;
+    delete[] tmp_hn_cat;
 }
 
 unsigned long MPIUniqueNamer::GetHash(string s) {

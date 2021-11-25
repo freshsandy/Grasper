@@ -363,7 +363,7 @@ class Worker {
     void Start() {
         // initial MPIUniqueNamer
         MPIUniqueNamer* p = MPIUniqueNamer::GetInstance(my_node_.local_comm);
-        p->AppendHash(config_->HDFS_INDEX_PATH +
+	p->AppendHash(config_->HDFS_INDEX_PATH +
                       config_->HDFS_VTX_SUBFOLDER +
                       config_->HDFS_VP_SUBFOLDER +
                       config_->HDFS_EP_SUBFOLDER +
