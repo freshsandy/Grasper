@@ -31,7 +31,10 @@ public:
         // Get Params
         assert(expert_obj.params.size() == 2);  // make sure input format
         Element_T inType = (Element_T) Tool::value_t2int(expert_obj.params[0]);
-        int vid = Tool::value_t2int(expert_obj.params[1]);
+
+        value_t value =expert_obj.params[1];
+        vid_t vid(Tool::value_t2int(&value));
+
         bool enabled = false;
         if(inType!=Element_T::VERTEX) {
             cout << "Wrong inType" << endl;

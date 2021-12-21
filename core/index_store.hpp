@@ -171,19 +171,19 @@ class IndexStore {
         return true;
     }
     bool check_adjacent_index(vid_t vid){
-        map<vid_t ,adjacent_index_>::iterator iter;
-        iter = vtx_adjacent_index.find(vid);
+        map<unsigned int ,adjacent_index_>::iterator iter;
+        iter = vtx_adjacent_index.find(vid.value());
         if(iter==vtx_adjacent_index.end()) return false;
         else return true;
     }
     map<label_t,vector<vid_t>> getVtxOutMap(vid_t vid){
-        map<vid_t ,adjacent_index_>::iterator iter;
-        iter = this->vtx_adjacent_index.find(vid);
+        map<label_t ,adjacent_index_>::iterator iter;
+        iter = this->vtx_adjacent_index.find(vid.value());
         return iter->second.out_map;
     }
     map<label_t,vector<vid_t>> getVtxInMap(vid_t vid){
-        map<vid_t ,adjacent_index_>::iterator iter;
-        iter = this->vtx_adjacent_index.find(vid);
+        map<label_t ,adjacent_index_>::iterator iter;
+        iter = this->vtx_adjacent_index.find(vid.value());
         return iter->second.in_map;
     }
 
@@ -207,7 +207,7 @@ class IndexStore {
     };
     unordered_map<int, index_> vtx_index;
     unordered_map<int, index_> edge_index;
-    unordered_map<vid_t ,adjacent_index_> vtx_adjacent_index;//vertex-central index
+    unordered_map<unsigned int, adjacent_index_> vtx_adjacent_index;//vertex-central index
 
     void get_elements_by_predicate(Element_T type, int pid, PredicateValue& pred, bool need_sort, vector<value_t>& vec) {
         unordered_map<int, index_>* m;
