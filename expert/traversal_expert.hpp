@@ -97,7 +97,7 @@ class TraversalExpert : public AbstractExpert {
     Config* config_;
 
     // index
-    index_store indexStore;
+    IndexStore indexStore;
 
     // ============Vertex===============
     // Get IN/OUT/BOTH of Vertex
@@ -120,8 +120,8 @@ class TraversalExpert : public AbstractExpert {
                         unordered_map<label_t,vector<vid_t>>::iterator iter;
                         iter = out_map.find(lid);
                         vector<vid_t> v_list = iter->second;
-                        for(auto& vid:v_list){
-                            value_t new_value
+                        for(auto& vid: v_list){
+                            value_t new_value;
                             Tool::str2int(to_string(vid.value()),new_value);
                             newData.push_back(new_value);
                         }
@@ -134,7 +134,7 @@ class TraversalExpert : public AbstractExpert {
                         iter = in_map.find(lid);
                         vector<vid_t> v_list = iter->second;
                         for(auto& vid:v_list){
-                            value_t new_value
+                            value_t new_value;
                             Tool::str2int(to_string(vid.value()),new_value);
                             newData.push_back(new_value);
                         }
