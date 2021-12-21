@@ -152,7 +152,7 @@ class Parser {
     void ParseTraversal(const vector<string>& params, Step_T type);
     void ParseValues(const vector<string>& params);
     void ParseWhere(const vector<string>& params);
-    void ParserAdajecentIndex(const string& param);
+    void ParserAdjacentIndex(const string& param);
 
  public:
     // Parse query string

@@ -95,7 +95,7 @@ bool Parser::Parse(const string& query, vector<Expert_Object>& vec, string& erro
         if (build_index) {
             ParseIndex(query);
         }else if(bulid_adjacent_index){
-            ParserAdajecentIndex(query);
+            ParserAdjacentIndex(query);
         }
         else if (set_config) {
             ParseSetConfig(query);
@@ -1502,7 +1502,7 @@ void Parser::ParseWhere(const vector<string>& params) {
     }
 }
 
-void Parser::ParserAdajecentIndex(const string& param){
+void Parser::ParserAdjacentIndex(const string& param){
     vector<string> params;
     Tool::splitWithEscape(param, ",() ", params);
     if (params.size() != 3) {
@@ -1519,9 +1519,10 @@ void Parser::ParserAdajecentIndex(const string& param){
         throw ParserException("expect V but get: " + params[1]);
     }
 
-    vid_t vid = 0;
+    value_t vid;
     Tool::trim(params[2], "\"");
-    params[2] = vid;
+    Tool::str2int(params[2],vid);
+
     expert.AddParam(type);
     expert.AddParam(vid);
     AppendExpert(expert);
