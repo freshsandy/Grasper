@@ -114,9 +114,9 @@ class TraversalExpert : public AbstractExpert {
                     check if have the adjecnt_index
 
                  * */
-                if(indexStore->check_adjacent_index(cur_vtx_id)){
+                if(indexStore.check_adjacent_index(cur_vtx_id)){
                     if(dir==Direction_T::OUT){
-                        unordered_map<label_t,vector<vid_t>> out_map = indexStore->getVtxOutMap(cur_vtx_id);
+                        unordered_map<label_t,vector<vid_t>> out_map = indexStore.getVtxOutMap(cur_vtx_id);
                         unordered_map<label_t,vector<vid_t>>::iterator iter;
                         iter = out_map.find(lid);
                         vector<vid_t> v_list = iter->second;
@@ -129,7 +129,7 @@ class TraversalExpert : public AbstractExpert {
                         //Tool::int2_value
                    }
                     if(dir==Direction_T::IN){
-                        unordered_map<label_t,vector<vid_t>> in_map = indexStore->getVtxInMap(cur_vtx_id);
+                        unordered_map<label_t,vector<vid_t>> in_map = indexStore.getVtxInMap(cur_vtx_id);
                         unordered_map<label_t,vector<vid_t>>::iterator iter;
                         iter = in_map.find(lid);
                         vector<vid_t> v_list = iter->second;
