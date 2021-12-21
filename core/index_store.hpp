@@ -163,17 +163,15 @@ class IndexStore {
         return true;
     }
     bool setAdjacentIndex(unordered_map<label_t,vector<vid_t>> in_map,
-                          unordered_map<label_t,vector<vid_t>> out_map,vid_t vid){
+                          unordered_map<label_t,vector<vid_t>> out_map,vid_t vid) {
         adjacent_index_ a_index;
-        a_index.in_map=in_map;
-        a_index.out_map=out_map;
-        vtx_adjacent_index.insert(make_pair(vid,a_index));
+        a_index.in_map = in_map;
+        a_index.out_map = out_map;
+        vtx_adjacent_index.insert(make_pair(vid.value(), a_index));
         return true;
     }
     bool check_adjacent_index(vid_t vid){
-        map<unsigned int ,adjacent_index_>::iterator iter;
-        iter = vtx_adjacent_index.find(vid.value());
-        if(iter==vtx_adjacent_index.end()) return false;
+        if(this->vtx_adjacent_index.find(vid.value())==this->vtx_adjacent_index.end()) return false;
         else return true;
     }
     map<label_t,vector<vid_t>> getVtxOutMap(vid_t vid){
