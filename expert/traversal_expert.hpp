@@ -18,6 +18,7 @@ Authors: Aaron Li (cjli@cse.cuhk.edu.hk)
 #include "storage/layout.hpp"
 #include "storage/data_store.hpp"
 #include "utils/tool.hpp"
+#include "core/index_store.hpp"
 
 // IN-OUT-BOTH
 
@@ -95,9 +96,13 @@ class TraversalExpert : public AbstractExpert {
     ExpertCache cache;
     Config* config_;
 
+    // index
+    index_store indexStore;
+
     // ============Vertex===============
     // Get IN/OUT/BOTH of Vertex
     void GetNeighborOfVertex(int tid, int lid, Direction_T dir, vector<pair<history_t, vector<value_t>>> & data) {
+
         for (auto& pair : data) {
             vector<value_t> newData;
 
@@ -105,41 +110,72 @@ class TraversalExpert : public AbstractExpert {
                 // Get the current vertex id and use it to get vertex instance
                 vid_t cur_vtx_id(Tool::value_t2int(value));
                 Vertex* vtx = data_store_->GetVertex(cur_vtx_id);
+                /*
+                    check if have the adjecnt_index
 
-                // for each neighbor, create a new value_t and store into newData
-                // IN & BOTH
-                if (dir != Direction_T::OUT) {
-                    for (auto & in_nb : vtx->in_nbs) {  // in_nb : vid_t
-                        // Get edge_id
-                        if (lid > 0) {
-                            eid_t e_id(cur_vtx_id.value(), in_nb.value());
-                            label_t label;
-                            get_label_for_edge(tid, e_id, label);
-
-                            if (label != lid) {
-                                continue;
-                            }
+                 * */
+                if(indexStore->check_adjacent_index(cur_vtx_id)){
+                    if(dir==Direction_T::OUT){
+                        map<label_t,vector<vid_t>> out_map = indexStore->getVtxOutMap(cur_vtx_id);
+                        map<label_t,vector<vid_t>>::iterator iter;
+                        iter = out_map.find(lid);
+                        vector<vid_t> v_list = iter->second;
+                        for(auto& vid:v_list){
+                            value_t new_value
+                            Tool::str2int(to_string(vid.value()),new_value);
+                            newData.push_back(new_value);
                         }
-                        value_t new_value;
-                        Tool::str2int(to_string(in_nb.value()), new_value);
-                        newData.push_back(new_value);
+
+                        //Tool::int2_value
+                   }
+                    if(dir==Direction_T::IN){
+                        map<label_t,vector<vid_t>> in_map = indexStore->getVtxInMap(cur_vtx_id);
+                        map<label_t,vector<vid_t>>::iterator iter;
+                        iter = in_map.find(lid);
+                        vector<vid_t> v_list = iter->second;
+                        for(auto& vid:v_list){
+                            value_t new_value
+                            Tool::str2int(to_string(vid.value()),new_value);
+                            newData.push_back(new_value);
+                        }
                     }
                 }
-                // OUT & BOTH
-                if (dir != Direction_T::IN) {
-                    for (auto & out_nb : vtx->out_nbs) {
-                        if (lid > 0) {
-                            eid_t e_id(out_nb.value(), cur_vtx_id.value());
-                            label_t label;
-                            get_label_for_edge(tid, e_id, label);
+                else {  //not use the adjecnt_index
+                    // for each neighbor, create a new value_t and store into newData
+                    // IN & BOTH
+                    if (dir != Direction_T::OUT) {
+                        for (auto &in_nb: vtx->in_nbs) {  // in_nb : vid_t
+                            // Get edge_id
+                            if (lid > 0) {
+                                eid_t e_id(cur_vtx_id.value(), in_nb.value());
+                                label_t label;
+                                get_label_for_edge(tid, e_id, label);
 
-                            if (label != lid) {
-                                continue;
+                                if (label != lid) {
+                                    continue;
+                                }
                             }
+                            value_t new_value;
+                            Tool::str2int(to_string(in_nb.value()), new_value);
+                            newData.push_back(new_value);
                         }
-                        value_t new_value;
-                        Tool::str2int(to_string(out_nb.value()), new_value);
-                        newData.push_back(new_value);
+                    }
+                    // OUT & BOTH
+                    if (dir != Direction_T::IN) {
+                        for (auto &out_nb: vtx->out_nbs) {
+                            if (lid > 0) {
+                                eid_t e_id(out_nb.value(), cur_vtx_id.value());
+                                label_t label;
+                                get_label_for_edge(tid, e_id, label);
+
+                                if (label != lid) {
+                                    continue;
+                                }
+                            }
+                            value_t new_value;
+                            Tool::str2int(to_string(out_nb.value()), new_value);
+                            newData.push_back(new_value);
+                        }
                     }
                 }
             }

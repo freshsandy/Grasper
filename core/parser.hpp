@@ -24,7 +24,8 @@ class Parser {
     enum Step_T {
         IN, OUT, BOTH, INE, OUTE, BOTHE, INV, OUTV, BOTHV, AND, AGGREGATE, AS, CAP, COUNT, DEDUP,
         GROUP, GROUPCOUNT, HAS, HASLABEL, HASKEY, HASVALUE, HASNOT, IS, KEY, LABEL, LIMIT, MAX,
-        MEAN, MIN, NOT, OR, ORDER, PROPERTIES, RANGE, SELECT, SKIP, SUM, UNION, VALUES, WHERE, COIN, REPEAT
+        MEAN, MIN, NOT, OR, ORDER, PROPERTIES, RANGE, SELECT, SKIP, SUM, UNION, VALUES, WHERE, COIN, REPEAT,
+        ADJACENTINDEX
     };
 
     // for debug usage
@@ -151,6 +152,7 @@ class Parser {
     void ParseTraversal(const vector<string>& params, Step_T type);
     void ParseValues(const vector<string>& params);
     void ParseWhere(const vector<string>& params);
+    void ParserAdajecentIndex(const string& param);
 
  public:
     // Parse query string

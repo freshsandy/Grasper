@@ -162,6 +162,30 @@ class IndexStore {
         value_str = Tool::DebugString(v);
         return true;
     }
+    bool setAdjacentIndex(map<label_t,vector<vid_t>> in_map,
+    map<label_t,vector<vid_t>> out_map,vid_t vid){
+        adjacent_index_ a_index;
+        a_index.in_map=in_map;
+        a_index.out_map=out_map;
+        vtx_adjacent_index.insert(make_pair(vid,a_index));
+        return true;
+    }
+    bool check_adjacent_index(vid_t vid){
+        map<vid_t ,adjacent_index_>::iterator iter;
+        iter = vtx_adjacent_index.find(vid);
+        if(iter==vtx_adjacent_index.end()) return false;
+        else return true;
+    }
+    map<label_t,vector<vid_t>> getVtxOutMap(vid_t vid){
+        map<vid_t ,adjacent_index_>::iterator iter;
+        iter = this->vtx_adjacent_index.find(vid);
+        return iter->second.out_map;
+    }
+    map<label_t,vector<vid_t>> getVtxInMap(vid_t vid){
+        map<vid_t ,adjacent_index_>::iterator iter;
+        iter = this->vtx_adjacent_index.find(vid);
+        return iter->second.in_map;
+    }
 
  private:
     Config * config_;
@@ -176,9 +200,14 @@ class IndexStore {
         map<value_t, uint64_t> count_map;
         vector<const value_t *> values;
     };
-
+    struct adjacent_index_{
+        bool isEnabled;         // lock mean the index have not been build yet
+        map<label_t,vector<vid_t>> in_map;
+        map<label_t,vector<vid_t>> out_map;
+    };
     unordered_map<int, index_> vtx_index;
     unordered_map<int, index_> edge_index;
+    map<vid_t ,adjacent_index_> vtx_adjacent_index;//vertex-central index
 
     void get_elements_by_predicate(Element_T type, int pid, PredicateValue& pred, bool need_sort, vector<value_t>& vec) {
         unordered_map<int, index_>* m;

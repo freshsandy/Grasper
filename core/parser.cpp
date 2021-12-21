@@ -64,6 +64,7 @@ bool Parser::Parse(const string& query, vector<Expert_Object>& vec, string& erro
     Clear();
     bool build_index = false;
     bool set_config = false;
+    bool bulid_adjacent_index = false;
     string error_prefix = "Parsing Error: ";
     // check prefix
     if (query.find("g.V().") == 0) {
@@ -78,7 +79,11 @@ bool Parser::Parse(const string& query, vector<Expert_Object>& vec, string& erro
     } else if (query.find("SetConfig") == 0) {
         set_config = true;
         error_prefix = "Set Config error: ";
-    } else {
+    }else if(query.find("Build adjacentIndex")==0){
+        bulid_adjacent_index = true;
+        error_prefix = "Build adjacent_Index error: ";
+    }
+    else {
         error_msg = "1. Execute query with 'g.V()' or 'g.E()'\n";
         error_msg += "2. Set up index by BuildIndex(V/E, propertyname)\n";
         error_msg += "3. Change config by SetConfig(config_name, t/f)\n";
@@ -89,7 +94,10 @@ bool Parser::Parse(const string& query, vector<Expert_Object>& vec, string& erro
     try {
         if (build_index) {
             ParseIndex(query);
-        } else if (set_config) {
+        }else if(bulid_adjacent_index){
+            ParserAdajecentIndex(query);
+        }
+        else if (set_config) {
             ParseSetConfig(query);
         } else {
             // trim blanks and remove prefix
@@ -1492,6 +1500,31 @@ void Parser::ParseWhere(const vector<string>& params) {
         expert.AddParam(label_step_key);
         ParsePredicate(param, 1, expert, true);
     }
+}
+
+void Parser::ParserAdajecentIndex(const string& param){
+    vector<string> params;
+    Tool::splitWithEscape(param, ",() ", params);
+    if (params.size() != 3) {
+        throw ParserException("expect 2 parameters");
+    }
+
+    Expert_Object expert(EXPERT_T::ADJACENTINDEX);
+
+    Element_T type;
+    if (params[1] == "V") {
+        type = Element_T::VERTEX;
+        io_type_ = IO_T::VERTEX;
+    } else {
+        throw ParserException("expect V but get: " + params[1]);
+    }
+
+    vid_t vid = 0;
+    Tool::trim(params[2], "\"");
+    params[2] = vid;
+    expert.AddParam(type);
+    expert.AddParam(vid);
+    AppendExpert(expert);
 }
 
 const map<string, Parser::Step_T> Parser::str2step = {
