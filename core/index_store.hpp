@@ -174,10 +174,10 @@ class IndexStore {
         if(this->vtx_adjacent_index.find(vid.value())==this->vtx_adjacent_index.end()) return false;
         else return true;
     }
-    map<label_t,vector<vid_t>> getVtxOutMap(vid_t vid){
+    unordered_map<label_t,vector<vid_t>> getVtxOutMap(vid_t vid){
         return this->vtx_adjacent_index.at(vid.value()).out_map;
     }
-    map<label_t,vector<vid_t>> getVtxInMap(vid_t vid){
+    unordered_map<label_t,vector<vid_t>> getVtxInMap(vid_t vid){
         return this->vtx_adjacent_index.at(vid.value()).in_map;
     }
 
