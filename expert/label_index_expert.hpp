@@ -82,7 +82,6 @@ private:
                 out_map.insert(make_pair(label,v_list));
             }else{
                 iter->second.insert(vid_);
-                std::sort(iter->second.begin(), iter->second.end());//sort after insert
             }
         }
 
@@ -98,7 +97,6 @@ private:
                 in_map.insert(make_pair(label,v_list));
             }else{
                 iter->second.insert(vid_);
-                std::sort(iter->second.begin(), iter->second.end());//sort after insert
             }
         }
         return indexStore->setAdjacentIndex(in_map,out_map);
