@@ -65,8 +65,8 @@ public:
     AbstractMailbox * mailbox_;
 private:
     bool build_edge_index(vid_t vid,int tid){
-       map<label_t,vector<pid_t>> in_map;
-       map<label_t,vector<pid_t>> out_map;
+        unordered_map<label_t,vector<pid_t>> in_map;
+        unordered_map<label_t,vector<pid_t>> out_map;
 
         Vertex* vtx = data_store_->GetVertex(vid);//get the central vertex
 
@@ -74,7 +74,7 @@ private:
             label_t label;
             eid_t e_id(vid.value(),vid_.value());
             data_store_->GetLabelForEdge(tid, e_id, label);
-            map<label_t,vector<vid_t>>::iterator iter;
+            unordered_map<label_t,vector<vid_t>>::iterator iter;
             iter = out_map.find(label);
             if(iter==out_map.end()){  //not find
                 vector<vid_t> v_list;
@@ -89,7 +89,7 @@ private:
             label_t label;
             eid_t e_id(vid.value(),vid_.value());
             data_store_->GetLabelForEdge(tid, e_id, label);
-            map<label_t,vector<vid_t>>::iterator iter;
+            unordered_map<label_t,vector<vid_t>>::iterator iter;
             iter = in_map.find(label);
             if(iter==in_map.end()){  //not find
                 vector<vid_t> v_list;
@@ -99,7 +99,7 @@ private:
                 iter->second.insert(vid_);
             }
         }
-        return indexStore->setAdjacentIndex(in_map,out_map);
+        return indexStore->setAdjacentIndex(in_map,out_map,vid);
 
         }
     }
