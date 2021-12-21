@@ -177,12 +177,12 @@ class IndexStore {
         else return true;
     }
     map<label_t,vector<vid_t>> getVtxOutMap(vid_t vid){
-        map<label_t ,adjacent_index_>::iterator iter;
+        map<vid_t ,adjacent_index_>::iterator iter;
         iter = this->vtx_adjacent_index.find(vid.value());
         return iter->second.out_map;
     }
     map<label_t,vector<vid_t>> getVtxInMap(vid_t vid){
-        map<label_t ,adjacent_index_>::iterator iter;
+        map<vid_t ,adjacent_index_>::iterator iter;
         iter = this->vtx_adjacent_index.find(vid.value());
         return iter->second.in_map;
     }
