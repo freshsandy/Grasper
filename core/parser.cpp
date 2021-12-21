@@ -1518,13 +1518,10 @@ void Parser::ParserAdjacentIndex(const string& param){
     } else {
         throw ParserException("expect V but get: " + params[1]);
     }
-
-    value_t vid;
-    Tool::trim(params[2], "\"");
+    
     Tool::str2int(params[2],vid);
-
     expert.AddParam(type);
-    expert.AddParam(vid);
+    expert.AddParam(params[2]);
     AppendExpert(expert);
 }
 
